@@ -1,15 +1,12 @@
-package com.tutor.taskmanagement.controller;
+package com.tutor.taskmanagement.api_controller;
 
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-//@RestController
-@Controller
-public class BaseController {
+@RestController
+public class ApiController {
 
     @RequestMapping(value = "/welcome",method = RequestMethod.GET)
 //    @GetMapping("/welcome")
-    @ResponseBody
     public String sayHello() {
         return "Hello World";
     }
