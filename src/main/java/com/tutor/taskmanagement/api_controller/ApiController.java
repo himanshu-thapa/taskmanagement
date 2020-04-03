@@ -16,14 +16,4 @@ public class ApiController {
         return "Hello World";
     }
 
-    @PostConstruct
-    public void display(){
-        Task task = new Task();
-        task.setTaskName("Task 1");
-        task.setIssueDate(new Date());
-        task.setCompletionDate(new Date());
-        task.setStatus(TaskStatus.INPROGRESS);
-
-        System.out.println("TASK:"+task);
-    }
 }
