@@ -4,6 +4,9 @@ import com.tutor.taskmanagement.task.entities.enums.TaskStatus;
 import lombok.*;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Entity
@@ -16,8 +19,13 @@ public class Task {
     @Column(name = "task_id")
     @Setter(AccessLevel.NONE)
     private Long id;
+
+    @NotNull
+    @Size(min = 5,max = 100)
     private String taskName; //task_name
+    @NotEmpty
     private String issueDate;
+    @NotEmpty
     private String completionDate;
     private TaskStatus status;
 

@@ -50,7 +50,8 @@
         <div class="col-lg-12 text-center">
             <div class="col-lg-12">
                 <h2> All tasks of {PersonName}</h2>
-                <button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModalCenter">Add Task</button>
+                <!--<button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModalCenter">Add Task</button>-->
+                <a th:href="@{/task/add}"><button type="button" class="btn btn-dark">Add Task</button></a>
             </div>
 
             <div class="col-lg-12">
@@ -79,7 +80,7 @@
             </div>
         </div>
         <!-- Modal -->
-        <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <!--<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -91,16 +92,22 @@
                     <div class="modal-body">
                         <form th:action="@{/task/post}" th:object="${task}" method="post">
                             <div class="form-group">
+                                <input th:if="${#fields.hasErrors('taskName')}" th:errors="*{taskName}">
+
                                 <label for="taskName">Task Name</label>
                                 <input type="text" class="form-control" id="taskName"
                                        th:field="*{taskName}" placeholder="type a new task name">
                             </div>
                             <div class="form-group">
+                                <input th:if="${#fields.hasErrors('issueDate')}" th:errors="*{issueDate}">
+
                                 <label for="issuedate">Issue date</label>
                                 <input type="date" class="form-control" id="issuedate"
                                        th:field="*{issueDate}" placeholder="type a new task name">
                             </div>
                             <div class="form-group">
+                                <input th:if="${#fields.hasErrors('completionDate')}" th:errors="*{completionDate}">
+
                                 <label for="compDate">Completion Date</label>
                                 <input type="date" class="form-control" id="compDate"
                                        th:field="*{completionDate}" placeholder="type a new task name">
@@ -115,7 +122,7 @@
 
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
 </div>
 
