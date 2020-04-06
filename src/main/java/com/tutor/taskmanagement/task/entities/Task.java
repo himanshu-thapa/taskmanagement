@@ -24,9 +24,9 @@ public class Task {
     @Size(min = 5,max = 100)
     private String taskName; //task_name
     @NotEmpty
-    private String issueDate;
+    private Date issueDate;
     @NotEmpty
-    private String completionDate;
+    private Date completionDate;
     private TaskStatus status;
 
     /*Constructor*//*

@@ -13,12 +13,17 @@
     <link th:href="@{/bootstrap/css/bootstrap.css}" rel="stylesheet">
 
 </head>
+<style>
+    .title-head {
+        margin-top: 50px;
+    }
+</style>
 <body>
 
 <!-- Navigation -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
     <div class="container">
-        <a class="navbar-brand" href="#">Start Bootstrap</a>
+        <a class="navbar-brand" href="#">Task Manager</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
                 aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -47,11 +52,16 @@
 <!-- Page Content -->
 <div class="container">
     <div class="row">
-        <div class="col-lg-12 text-center">
+        <div class="col-lg-12">
             <div class="col-lg-12">
-                <h2> All tasks of {PersonName}</h2>
-                <!--<button type="button" class="btn btn-dark" data-toggle="modal" data-target="#exampleModalCenter">Add Task</button>-->
-                <a th:href="@{/task/add}"><button type="button" class="btn btn-dark">Add Task</button></a>
+                <div class="title-head">
+                    <h2 class="col-lg-9"> All tasks of {PersonName}</h2>
+                    <span class="col-lg-3">
+                        <a th:href="@{/task/add}">
+                        <button type="button" class="btn btn-dark">Add Task</button>
+                    </a>
+                    </span>
+                </div>
             </div>
 
             <div class="col-lg-12">
@@ -67,62 +77,22 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr>
-                        <th scope="row">1</th>
-                        <td>Task 1</td>
-                        <td>2020-04-03</td>
-                        <td>2020-04-10</td>
-                        <td>In Progress</td>
-                        <td>EDIT | DELETE</td>
+                    <tr th:each="task,key:${tasks}">
+                        <th scope="row" th:text="${key.index}"></th>
+                        <td th:text="${task.taskName}"></td>
+                        <td th:text="${task.issueDate}"></td>
+                        <td th:text="${task.completionDate}"></td>
+                        <td th:text="${task.status}"></td>
+                        <td>
+                            <a th:href="@{'/task/update/'+${task.id}}">EDIT </a>
+                            |
+                            <a href="#">DELETE</a>
+                        </td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <!-- Modal -->
-        <!--<div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalCenterTitle">Add new task</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form th:action="@{/task/post}" th:object="${task}" method="post">
-                            <div class="form-group">
-                                <input th:if="${#fields.hasErrors('taskName')}" th:errors="*{taskName}">
-
-                                <label for="taskName">Task Name</label>
-                                <input type="text" class="form-control" id="taskName"
-                                       th:field="*{taskName}" placeholder="type a new task name">
-                            </div>
-                            <div class="form-group">
-                                <input th:if="${#fields.hasErrors('issueDate')}" th:errors="*{issueDate}">
-
-                                <label for="issuedate">Issue date</label>
-                                <input type="date" class="form-control" id="issuedate"
-                                       th:field="*{issueDate}" placeholder="type a new task name">
-                            </div>
-                            <div class="form-group">
-                                <input th:if="${#fields.hasErrors('completionDate')}" th:errors="*{completionDate}">
-
-                                <label for="compDate">Completion Date</label>
-                                <input type="date" class="form-control" id="compDate"
-                                       th:field="*{completionDate}" placeholder="type a new task name">
-                            </div>
-
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                            </div>
-                        </form>
-                    </div>
-
-                </div>
-            </div>
-        </div>-->
     </div>
 </div>
 
