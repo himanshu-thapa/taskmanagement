@@ -17,4 +17,6 @@ public interface TaskDAO {
     //-> Unique task
 
     Task findById(Long id);
+
+    Task save(Task task);
 }

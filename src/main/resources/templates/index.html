@@ -17,6 +17,9 @@
     .title-head {
         margin-top: 50px;
     }
+    #sticky-footer {
+        flex-shrink: unset;
+    }
 </style>
 <body>
 
@@ -50,20 +53,20 @@
 </nav>
 
 <!-- Page Content -->
-<div class="container">
+<div class="container" style="min-height: 819px">
     <div class="row">
         <div class="col-lg-12">
-            <div class="col-lg-12">
-                <div class="title-head">
-                    <h2 class="col-lg-9"> All tasks of {PersonName}</h2>
-                    <span class="col-lg-3">
-                        <a th:href="@{/task/add}">
-                        <button type="button" class="btn btn-dark">Add Task</button>
-                    </a>
-                    </span>
-                </div>
+            <div class="row">
+            <div class="title-head col-lg-9">
+                <h2> All tasks of {PersonName}</h2>
             </div>
-
+            <div class="col-lg-3 title-head">
+                <a th:href="@{/task/add}" style="margin-left: 165px">
+                    <button type="button" class="btn btn-dark">Add Task</button>
+                </a>
+            </div>
+            </div>
+            <hr>
             <div class="col-lg-12">
                 <table class="table">
                     <thead class="thead-dark">
@@ -95,7 +98,11 @@
         </div>
     </div>
 </div>
-
+<footer id="sticky-footer" class="py-4 bg-dark text-white-50">
+    <div class="container text-center">
+        <small>Copyright &copy; Taskmanager</small>
+    </div>
+</footer>
 <!-- Bootstrap core JavaScript -->
 <script th:src="@{/jquery/jquery.slim.min.js}"></script>
 <script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>

@@ -24,4 +24,9 @@ public class TaskDAOImpl implements TaskDAO {
         Task task = taskRepository.getOneById(id);
         return task;
     }
+
+    @Override
+    public Task save(Task task) {
+        return taskRepository.save(task);
+    }
 }
