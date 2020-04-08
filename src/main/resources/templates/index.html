@@ -17,6 +17,7 @@
     .title-head {
         margin-top: 50px;
     }
+
     #sticky-footer {
         flex-shrink: unset;
     }
@@ -57,14 +58,14 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="row">
-            <div class="title-head col-lg-9">
-                <h2> All tasks of {PersonName}</h2>
-            </div>
-            <div class="col-lg-3 title-head">
-                <a th:href="@{/task/add}" style="margin-left: 165px">
-                    <button type="button" class="btn btn-dark">Add Task</button>
-                </a>
-            </div>
+                <div class="title-head col-lg-9">
+                    <h2> All tasks of {PersonName}</h2>
+                </div>
+                <div class="col-lg-3 title-head">
+                    <a th:href="@{/task/add}" style="margin-left: 165px">
+                        <button type="button" class="btn btn-dark">Add Task</button>
+                    </a>
+                </div>
             </div>
             <hr>
             <div class="col-lg-12">
@@ -89,7 +90,7 @@
                         <td>
                             <a th:href="@{'/task/update/'+${task.id}}">EDIT </a>
                             |
-                            <a href="#">DELETE</a>
+                            <a href=# th:onclick="|deleteTask('${task.id}')|">DELETE</a>
                         </td>
                     </tr>
                     </tbody>
@@ -106,5 +107,19 @@
 <!-- Bootstrap core JavaScript -->
 <script th:src="@{/jquery/jquery.slim.min.js}"></script>
 <script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+<script type="text/javascript" th:inline="javascript">
+    function deleteTask(id) {
+        $.ajax({
+            url: "/task/delete/" + id,
+            type: "DELETE",
+            success: function (result) {
+                console.log(result);
+                window.location.href="/home";
+            }
+        });
+    }
+</script>
 </body>
 </html>

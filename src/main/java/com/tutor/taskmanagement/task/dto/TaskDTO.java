@@ -1,5 +1,6 @@
 package com.tutor.taskmanagement.task.dto;
 
+import com.tutor.taskmanagement.task.entities.enums.TaskStatus;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,6 +23,7 @@ public class TaskDTO {
     private String issueDate;
     @NotEmpty
     private String completionDate;
+    private TaskStatus status;
 
     /*String to Date Conversion (DTO->Entity)*/
     public Date getIssueDateConverted() throws ParseException {

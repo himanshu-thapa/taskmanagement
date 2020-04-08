@@ -8,9 +8,7 @@ import com.tutor.taskmanagement.task.entities.enums.TaskStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
@@ -24,7 +22,6 @@ public class ViewController {
     @Autowired
     private Mapper mapper;
 
-    //    @RequestMapping("/")
     @GetMapping({"/", "/home"})
     public ModelAndView getIndex() {
         ModelAndView mv = new ModelAndView("index");
@@ -55,7 +52,9 @@ public class ViewController {
         if (taskDTO.getId() == null) {
             //Create
             Task task = mapper.convertToEntity(taskDTO);
-            task.setStatus(TaskStatus.INPROGRESS);
+//            task.setStatus(TaskStatus.INPROGRESS);
+            task.setStatus(taskDTO.getStatus());
+
             Task savedTask = taskDAO.save(task);
             System.out.println("SAVED TASK ID IS: " + savedTask.getId());
         } else {
@@ -64,6 +63,7 @@ public class ViewController {
             task.setTaskName(taskDTO.getTaskName());
             task.setIssueDate(taskDTO.getIssueDateConverted());
             task.setCompletionDate(taskDTO.getCompletionDateConverted());
+            task.setStatus(taskDTO.getStatus());
             Task updatedTask = taskDAO.save(task);
             System.out.println("UPDATED TASK ID IS: " + updatedTask.getId());
         }
@@ -80,6 +80,13 @@ public class ViewController {
         mv.addObject("taskDTO", taskDTO);
 
         return mv;
+    }
+
+    @DeleteMapping("/task/delete/{id}")
+    @ResponseBody
+    public String deleteTask(@PathVariable Long id) {
+        taskDAO.deleteTask(id);
+        return "OK";
     }
 
 
