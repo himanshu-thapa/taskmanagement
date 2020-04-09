@@ -45,8 +45,20 @@ public class UserController {
         return "redirect:/users";
     }
 
+    // /users/{id} -> get User GET
+    @GetMapping("/users/{id}")
+    public ModelAndView userEditPage(@PathVariable Long id) {
+        ModelAndView mv = new ModelAndView("add-user-form");
 
-    // /users/update/{id} -> update
+        User user = userDAO.findUserById(id);
+        UserDTO userDTO = mapper.convertToDTO(user);
+
+        mv.addObject("userDTO", userDTO);
+        return mv;
+    }
+
+
+    // /users -> update
     @PutMapping("/users")
     public String updateUser(@Valid @ModelAttribute UserDTO userDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
