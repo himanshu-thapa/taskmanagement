@@ -1,4 +1,4 @@
-package com.tutor.taskmanagement.view_controller;
+package com.tutor.taskmanagement.task.controller;
 
 import com.tutor.taskmanagement.task.TaskMapper;
 import com.tutor.taskmanagement.task.dao.TaskDAO;
@@ -15,7 +15,7 @@ import java.text.ParseException;
 import java.util.List;
 
 @Controller
-public class ViewController {
+public class TaskController {
     @Autowired
     private TaskDAO taskDAO;
     @Autowired
@@ -87,6 +87,4 @@ public class ViewController {
         taskDAO.deleteTask(id);
         return "OK";
     }
-
-
 }

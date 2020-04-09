@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 import java.text.ParseException;
 
 @Component
-public class Mapper {
+public class TaskMapper {
     @Autowired
     private ModelMapper modelMapper;
 
