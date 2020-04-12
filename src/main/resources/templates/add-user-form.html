@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Task Management</title>
+
+    <!-- Bootstrap core CSS -->
+    <link th:href="@{/bootstrap/css/bootstrap.css}" rel="stylesheet">
+
+</head>
+<style>
+    .error {
+        color: red;
+    }
+</style>
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
+    <div class="container">
+        <a class="navbar-brand" href="#">Task Manager</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Home
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Services</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+    <div class="row">
+        <div class="modal-content" style="margin-top: 150px">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Add new user</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form th:object="${userDTO}" id="userForm">
+                    <input type="hidden" th:field="*{id}" th:value="*{id}" id="userId">
+                    <div class="form-group">
+                        <p class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
+
+                        <label for="firstName">First Name</label>
+                        <input type="text" class="form-control" id="firstName"
+                               th:field="*{firstName}" th:value="*{firstName}" placeholder="type a new task name">
+                    </div>
+                    <div class="form-group">
+                        <p class="error" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Must not
+                            be null</p>
+
+                        <label for="lastName">Last Name</label>
+                        <input type="date" class="form-control" id="lastName"
+                               th:field="*{lastName}" th:value="*{lastName}" placeholder="type a new task name">
+                    </div>
+                    <div class="form-group">
+                        <p class="error" th:if="${#fields.hasErrors('email')}"
+                           th:errors="*{email}"></p>
+
+                        <label for="email">Email</label>
+                        <input type="date" class="form-control" id="email"
+                               th:field="*{email}" th:value="*{email}" placeholder="type a new task name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password"
+                               th:field="*{password}" th:value="*{password}" placeholder="type a new task name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="text" class="form-control" id="phone"
+                               th:field="*{phone}" th:value="*{phone}" placeholder="type a new task name">
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap core JavaScript -->
+<script th:src="@{/jquery/jquery.slim.min.js}"></script>
+<script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+    $('#userForm').submit(function (e) {
+        e.preventDefault();
+        var userId = $('#userId').val();
+
+        var body = {
+            id: userId,
+            firstName: $('#firstName').val(),
+            lastName: $('#lastName').val(),
+            email: $('#email').val(),
+            password: $('#password').val(),
+            phone: $('#phone').val()
+        }
+
+        console.log(body);
+
+        if (userId.length > 0) {
+            alert("update");
+            $.ajax({
+                url: "/users",
+                type: "PUT",
+                data: JSON.stringify(body),
+                contentType: "application/json",
+                dataType: 'json',
+
+                success: function (result) {
+                    console.log(result);
+                    window.location.href = "/users";
+                }
+            });
+        } else {
+            $.ajax({
+                url: "/users",
+                type: "POST",
+                data: JSON.stringify(body),
+                contentType: "application/json",
+                dataType: 'json',
+                success: function (result) {
+                    console.log(result);
+                    window.location.href = "/users";
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>
