@@ -22,4 +22,13 @@ public class User {
     private String phone;
     private Date createdDate;
     private Date updatedDate;
+
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_role",
+            joinColumns =
+                    { @JoinColumn(name = "user_id", referencedColumnName = "user_id") },
+            inverseJoinColumns =
+                    { @JoinColumn(name = "role_id", referencedColumnName = "id") })
+    private Role role;
 }
