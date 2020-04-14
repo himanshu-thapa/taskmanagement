@@ -7,13 +7,16 @@ import com.tutor.taskmanagement.user.enitites.Role;
 import com.tutor.taskmanagement.user.enitites.User;
 import com.tutor.taskmanagement.user.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 @Controller
@@ -24,8 +27,10 @@ public class UserController {
     private UserMapper mapper;
     @Autowired
     private RoleRepository roleRepo;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
 
-    @GetMapping("/login")
+    @GetMapping({"/", "/login"})
     public ModelAndView loginPage() {
         return new ModelAndView("login");
     }
@@ -62,12 +67,13 @@ public class UserController {
         }
 
         /*Get role*/
-        Role role = roleRepo.findByRole("USER");
+        Role role = roleRepo.findByRole("ROLE_USER");
 
         User user = mapper.convertToEntity(userDTO);
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         user.setCreatedDate(new Date());
         user.setUpdatedDate(new Date());
-        user.setRole(role);
+        user.setRoles(new HashSet<>(Collections.singletonList(role)));
         userDAO.createUser(user);
         return "redirect:/login";
     }

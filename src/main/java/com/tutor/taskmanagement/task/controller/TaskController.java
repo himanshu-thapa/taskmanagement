@@ -21,7 +21,7 @@ public class TaskController {
     @Autowired
     private TaskMapper taskMapper;
 
-    @GetMapping({"/", "/home"})
+    @GetMapping("/home")
     public ModelAndView getIndex() {
         ModelAndView mv = new ModelAndView("index");
         /*Find all tasks*/

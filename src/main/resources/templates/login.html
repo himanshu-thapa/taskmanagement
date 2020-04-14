@@ -5,8 +5,8 @@
     <title>Title</title>
     <!-- Bootstrap core CSS -->
     <link th:href="@{/bootstrap/css/bootstrap.css}" rel="stylesheet">
-    <link th:href="@{/login-form.css}" th:rel="stylesheet">
-    <link th:href="@{/font-awesome.css}">
+    <link th:href="@{/css/login-form.css}" th:rel="stylesheet">
+    <link th:href="@{/css/font-awesome.css}">
 </head>
 <body>
 <div class="container">
@@ -15,16 +15,21 @@
             <div class="card card-signin my-5">
                 <div class="card-body">
                     <h5 class="card-title text-center">Sign In</h5>
-                    <form class="form-signin">
+                    <form class="form-signin" th:action="@{/signin}" method="post">
+                        <div class="form-group" th:if="${param.error}">
+                            <div class="alert alert-danger">
+                                Invalid username or password.
+                            </div>
+                        </div>
                         <div class="form-label-group">
                             <input type="email" id="inputEmail" class="form-control" placeholder="Email address"
-                                   required autofocus>
+                                   required autofocus name="email">
                             <label for="inputEmail">Email address</label>
                         </div>
 
                         <div class="form-label-group">
                             <input type="password" id="inputPassword" class="form-control" placeholder="Password"
-                                   required>
+                                   required name="password">
                             <label for="inputPassword">Password</label>
                         </div>
 
