@@ -60,7 +60,7 @@ public class UserController {
 
 
     // /users -> post user POST
-    @PostMapping("/users")
+    @PostMapping("/register")
     public String createNewUser(@Valid @ModelAttribute UserDTO userDTO, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "user-registration";

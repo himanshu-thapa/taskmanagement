@@ -18,7 +18,7 @@
                 </div>
                 <div class="card-body">
                     <h5 class="card-title text-center">Register</h5>
-                    <form class="form-signin" th:object="${userDTO}" method="post" th:action="@{/users}">
+                    <form class="form-signin" th:object="${userDTO}" method="post" th:action="@{/register}">
                         <div class="form-label-group">
                             <p class="error" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></p>
                             <input type="text" id="firstName" class="form-control" placeholder="First Name" required autofocus

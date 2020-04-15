@@ -4,7 +4,11 @@ import com.tutor.taskmanagement.task.TaskMapper;
 import com.tutor.taskmanagement.task.dao.TaskDAO;
 import com.tutor.taskmanagement.task.dto.TaskDTO;
 import com.tutor.taskmanagement.task.entities.Task;
+import com.tutor.taskmanagement.user.enitites.User;
+import com.tutor.taskmanagement.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -20,12 +24,20 @@ public class TaskController {
     private TaskDAO taskDAO;
     @Autowired
     private TaskMapper taskMapper;
+    @Autowired
+    private UserRepository userRepo;
 
     @GetMapping("/home")
     public ModelAndView getIndex() {
         ModelAndView mv = new ModelAndView("index");
         /*Find all tasks*/
         List<Task> tasks = taskDAO.findAll();
+        /*Get Username*/
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+
+        User user = userRepo.findByEmail(email);
+        mv.addObject("username", user.getFirstName() + ' ' + user.getLastName());
         mv.addObject("tasks", tasks);
         return mv;
     }

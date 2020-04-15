@@ -21,6 +21,13 @@
     #sticky-footer {
         flex-shrink: unset;
     }
+
+    .logout-btn {
+        border: none;
+        background: 0;
+        color: rgba(255, 255, 255, 0.5);
+        margin-top: 7px;
+    }
 </style>
 <body>
 
@@ -46,7 +53,9 @@
                     <a class="nav-link" href="#">Services</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
+                    <form th:action="@{/logout}" method="post">
+                        <button class="logout-btn" type="submit">Logout</button>
+                    </form>
                 </li>
             </ul>
         </div>
@@ -59,7 +68,7 @@
         <div class="col-lg-12">
             <div class="row">
                 <div class="title-head col-lg-9">
-                    <h2> All tasks of {PersonName}</h2>
+                    <h2> All tasks of <span th:text="${username}"></span></h2>
                 </div>
                 <div class="col-lg-3 title-head">
                     <a th:href="@{/task/add}" style="margin-left: 165px">
@@ -116,7 +125,7 @@
             type: "DELETE",
             success: function (result) {
                 console.log(result);
-                window.location.href="/home";
+                window.location.href = "/home";
             }
         });
     }
