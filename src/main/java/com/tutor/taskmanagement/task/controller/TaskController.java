@@ -7,6 +7,7 @@ import com.tutor.taskmanagement.task.entities.Task;
 import com.tutor.taskmanagement.user.enitites.User;
 import com.tutor.taskmanagement.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -28,6 +29,7 @@ public class TaskController {
     private UserRepository userRepo;
 
     @GetMapping("/home")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
     public ModelAndView getIndex() {
         ModelAndView mv = new ModelAndView("index");
         /*Find all tasks*/

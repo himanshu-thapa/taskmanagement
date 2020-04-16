@@ -133,3 +133,17 @@ body {
         color: #777;
     }
 }
+
+.title-head {
+    margin-top: 50px;
+}
+
+#sticky-footer {
+    flex-shrink: unset;
+}
+.logout-btn {
+    border: none;
+    background: 0;
+    color: rgba(255, 255, 255, 0.5);
+    margin-top: 7px;
+}

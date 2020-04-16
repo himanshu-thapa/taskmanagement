@@ -1,18 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Task Management</title>
-
-    <!-- Bootstrap core CSS -->
-    <link th:href="@{/bootstrap/css/bootstrap.css}" rel="stylesheet">
-
-</head>
+<head data-th-replace="fragments/head :: head"></head>
 <style>
     .error {
         color: red;
@@ -21,94 +9,66 @@
 <body>
 
 <!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark static-top">
-    <div class="container">
-        <a class="navbar-brand" href="#">Task Manager</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home
-                        <span class="sr-only">(current)</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Services</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<div data-th-replace="fragments/nav-bar :: navbar"></div>
 
 <!-- Page Content -->
 <div class="container">
     <div class="row">
-            <div class="modal-content" style="margin-top: 150px">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalCenterTitle">Add new task</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form th:action="@{/task/post}" th:object="${taskDTO}" method="post">
-                        <input type="hidden" th:field="*{id}" th:value="*{id}">
-                        <div class="form-group">
-                            <p class="error" th:if="${#fields.hasErrors('taskName')}" th:errors="*{taskName}"></p>
-
-                            <label for="taskName">Task Name</label>
-                            <input type="text" class="form-control" id="taskName"
-                                   th:field="*{taskName}" th:value="*{taskName}" placeholder="type a new task name">
-                        </div>
-                        <div class="form-group">
-                            <p class="error" th:if="${#fields.hasErrors('issueDate')}" th:errors="*{issueDate}">Must not
-                                be null</p>
-
-                            <label for="issuedate">Issue date</label>
-                            <input type="date" class="form-control" id="issuedate"
-                                   th:field="*{issueDate}" th:value="*{issueDate}" placeholder="type a new task name">
-                        </div>
-                        <div class="form-group">
-                            <p class="error" th:if="${#fields.hasErrors('completionDate')}"
-                               th:errors="*{completionDate}"></p>
-
-                            <label for="compDate">Completion Date</label>
-                            <input type="date" class="form-control" id="compDate"
-                                   th:field="*{completionDate}" th:value="*{completionDate}" placeholder="type a new task name">
-                        </div>
-
-                        <div class="form-group">
-                            <label for="compDate">Status</label>
-                            <select name="status">
-                                <option th:each="stats : ${T(com.tutor.taskmanagement.task.entities.enums.TaskStatus).values()}"
-                                        th:value="${stats}" th:text="${stats}"></option>
-                            </select>
-                        </div>
-
-
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </div>
-                    </form>
-                </div>
-
+        <div class="modal-content" style="margin-top: 150px">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Add new task</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
+            <div class="modal-body">
+                <form th:action="@{/task/post}" th:object="${taskDTO}" method="post">
+                    <input type="hidden" th:field="*{id}" th:value="*{id}">
+                    <div class="form-group">
+                        <p class="error" th:if="${#fields.hasErrors('taskName')}" th:errors="*{taskName}"></p>
+
+                        <label for="taskName">Task Name</label>
+                        <input type="text" class="form-control" id="taskName"
+                               th:field="*{taskName}" th:value="*{taskName}" placeholder="type a new task name">
+                    </div>
+                    <div class="form-group">
+                        <p class="error" th:if="${#fields.hasErrors('issueDate')}" th:errors="*{issueDate}">Must not
+                            be null</p>
+
+                        <label for="issuedate">Issue date</label>
+                        <input type="date" class="form-control" id="issuedate"
+                               th:field="*{issueDate}" th:value="*{issueDate}" placeholder="type a new task name">
+                    </div>
+                    <div class="form-group">
+                        <p class="error" th:if="${#fields.hasErrors('completionDate')}"
+                           th:errors="*{completionDate}"></p>
+
+                        <label for="compDate">Completion Date</label>
+                        <input type="date" class="form-control" id="compDate"
+                               th:field="*{completionDate}" th:value="*{completionDate}"
+                               placeholder="type a new task name">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="compDate">Status</label>
+                        <select name="status">
+                            <option th:each="stats : ${T(com.tutor.taskmanagement.task.entities.enums.TaskStatus).values()}"
+                                    th:value="${stats}" th:text="${stats}"></option>
+                        </select>
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </div>
+
+        </div>
     </div>
 </div>
 
-<!-- Bootstrap core JavaScript -->
-<script th:src="@{/jquery/jquery.slim.min.js}"></script>
-<script th:src="@{/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<div data-th-replace="fragments/footer::footer"></div>
 </body>
 </html>

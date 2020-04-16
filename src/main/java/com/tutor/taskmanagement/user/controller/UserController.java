@@ -7,6 +7,7 @@ import com.tutor.taskmanagement.user.enitites.Role;
 import com.tutor.taskmanagement.user.enitites.User;
 import com.tutor.taskmanagement.user.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -44,6 +45,7 @@ public class UserController {
 
     // /users -> list all users GET
     @GetMapping("/users")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ModelAndView usersHomePage() {
         ModelAndView mv = new ModelAndView("users");
         List<User> users = userDAO.findAllUsers();
