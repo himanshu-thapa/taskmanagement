@@ -4,9 +4,13 @@ import com.tutor.taskmanagement.task.TaskMapper;
 import com.tutor.taskmanagement.task.dao.TaskDAO;
 import com.tutor.taskmanagement.task.dto.TaskDTO;
 import com.tutor.taskmanagement.task.entities.Task;
+import com.tutor.taskmanagement.task.pagination.PagerModel;
 import com.tutor.taskmanagement.user.enitites.User;
 import com.tutor.taskmanagement.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,10 +21,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.validation.Valid;
 import java.text.ParseException;
-import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class TaskController {
+    private static final int BUTTONS_TO_SHOW = 5;
+    private static final int[] PAGE_SIZES = {5, 10, 25, 50, 100};
     @Autowired
     private TaskDAO taskDAO;
     @Autowired
@@ -28,12 +34,24 @@ public class TaskController {
     @Autowired
     private UserRepository userRepo;
 
+
     @GetMapping("/home")
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-    public ModelAndView getIndex() {
+    public ModelAndView getIndex(Optional<Integer> page, Optional<Integer> pageSize, Optional<String> taskName) {
         ModelAndView mv = new ModelAndView("index");
+
+        int evalPageSize = pageSize.orElse(10);
+        int evalPage = (page.orElse(0) < 1) ? 0 : page.get() - 1; //ternary operator
+
+        Pageable pageable = PageRequest.of(evalPage, evalPageSize);
         /*Find all tasks*/
-        List<Task> tasks = taskDAO.findAll();
+        Page<Task> tasks = taskDAO.findAll(pageable, taskName.orElse("_"));
+        PagerModel pager = new PagerModel(tasks.getTotalPages(), tasks.getNumber(), BUTTONS_TO_SHOW);
+        mv.addObject("selectedPageSize", evalPageSize);
+        mv.addObject("pageSizes", PAGE_SIZES);
+        mv.addObject("pager", pager);
+        mv.addObject("tasks", tasks);
+
         /*Get Username*/
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();

@@ -1,6 +1,8 @@
 package com.tutor.taskmanagement.task.dao;
 
 import com.tutor.taskmanagement.task.entities.Task;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +13,7 @@ public interface TaskDAO {
     // findAll
     // -> List of task
 
-    List<Task> findAll();
+    Page<Task> findAll(Pageable pageable, String s);
 
     //findById
     //-> Unique task
