@@ -5,8 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public interface TaskDAO {
 
@@ -14,6 +12,8 @@ public interface TaskDAO {
     // -> List of task
 
     Page<Task> findAll(Pageable pageable, String s);
+
+    Page<Task> findAllByUserId(Pageable pageable, Long id,String s);
 
     //findById
     //-> Unique task

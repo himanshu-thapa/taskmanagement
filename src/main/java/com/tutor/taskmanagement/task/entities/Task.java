@@ -22,4 +22,6 @@ public class Task {
     private Date completionDate;
     private TaskStatus status;
 
+    private Long userId;
+
 }

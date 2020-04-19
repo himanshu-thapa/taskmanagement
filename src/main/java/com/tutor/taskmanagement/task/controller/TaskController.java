@@ -19,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.ParseException;
 import java.util.Optional;
@@ -37,7 +38,10 @@ public class TaskController {
 
     @GetMapping("/home")
     @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
-    public ModelAndView getIndex(Optional<Integer> page, Optional<Integer> pageSize, Optional<String> taskName) {
+    public ModelAndView getIndex(Optional<Integer> page, Optional<Integer> pageSize, Optional<String> taskName, HttpServletRequest request) {
+        /*Get user details*/
+        String userEmail = request.getUserPrincipal().getName();
+        User user = userRepo.findByEmail(userEmail);
         ModelAndView mv = new ModelAndView("index");
 
         int evalPageSize = pageSize.orElse(10);
@@ -45,7 +49,7 @@ public class TaskController {
 
         Pageable pageable = PageRequest.of(evalPage, evalPageSize);
         /*Find all tasks*/
-        Page<Task> tasks = taskDAO.findAll(pageable, taskName.orElse("_"));
+        Page<Task> tasks = taskDAO.findAllByUserId(pageable, user.getId(), taskName.orElse("_"));
         PagerModel pager = new PagerModel(tasks.getTotalPages(), tasks.getNumber(), BUTTONS_TO_SHOW);
         mv.addObject("selectedPageSize", evalPageSize);
         mv.addObject("pageSizes", PAGE_SIZES);
@@ -56,9 +60,7 @@ public class TaskController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
 
-        User user = userRepo.findByEmail(email);
         mv.addObject("username", user.getFirstName() + ' ' + user.getLastName());
-        mv.addObject("tasks", tasks);
         return mv;
     }
 
@@ -70,20 +72,17 @@ public class TaskController {
     }
 
     @PostMapping("/task/post")
-    public String createNewPost(@Valid TaskDTO taskDTO, BindingResult result) throws ParseException {
+    public String createNewPost(@Valid TaskDTO taskDTO, BindingResult result, HttpServletRequest request) throws ParseException {
         if (result.hasErrors()) {
             return "add-task-form";
         }
-
-        /*id==null
-         * create new task
-         * id !=null
-         * update task*/
-
         if (taskDTO.getId() == null) {
+            /*Get user details*/
+            String userEmail = request.getUserPrincipal().getName();
+            User user = userRepo.findByEmail(userEmail);
             //Create
             Task task = taskMapper.convertToEntity(taskDTO);
-//            task.setStatus(TaskStatus.INPROGRESS);
+            task.setUserId(user.getId());
             task.setStatus(taskDTO.getStatus());
 
             Task savedTask = taskDAO.save(task);

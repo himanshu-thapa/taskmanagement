@@ -8,14 +8,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-//    @Query(value = "select * from task where task_id=:id",nativeQuery = true) //SQL query
+    //    @Query(value = "select * from task where task_id=:id",nativeQuery = true) //SQL query
     Task getOneById(Long id);
 
-    @Query("select t from Task t where t.taskName like %:s%") //JPQl -> java persistence query language
+    @Query("select t from Task t where t.taskName like %:s%")
+        //JPQl -> java persistence query language
     Page<Task> findAll(Pageable pageable, @Param("s") String s);
+
+    @Query("select t from Task t where t.userId=:id and t.taskName like %:s%")
+    Page<Task> findAllByUserId(Pageable pageable, @Param("id") Long id, @Param("s") String s);
 }

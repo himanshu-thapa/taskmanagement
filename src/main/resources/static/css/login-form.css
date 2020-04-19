@@ -147,3 +147,43 @@ body {
     color: rgba(255, 255, 255, 0.5);
     margin-top: 7px;
 }
+
+/*------------PAGINATION---------*/
+.event-pagination {
+    display: inline-block;
+    padding-left: 0;
+    margin: 0;
+    border-radius: 4px;
+}
+
+.quantity-select > .event-pagination {
+    border-radius: 10%;
+}
+
+.event-pagination > li > a {
+    border-radius: 10%;
+}
+.quantity-pagesize {
+    margin-bottom: 0;
+}
+.pagination-centered {
+    text-align: right;
+}
+.quantity-select {
+    margin-bottom: 0;
+}
+
+.quantity-pagesize {
+    margin-bottom: 0;
+}
+
+.next-page {
+    margin-bottom: 0;
+}
+
+.next-page-ul {
+    margin-bottom: 0;
+}
+.personPagination li {
+    display: inline-block;
+}

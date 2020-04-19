@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head data-th-replace="fragments/head :: head"></head>
-<body>
+<body style="background: none!important;">
 
 <!-- Navigation -->
 <div data-th-replace="fragments/nav-bar :: navbar"></div>
@@ -20,6 +20,16 @@
                     </a>
                 </div>
             </div>
+            <div class="col-lg-12">
+                <div class="search-form">
+                    <form class="form-inline mr-auto" id="search-form">
+                        <input id="search-input" class="form-control mr-sm-2" type="text" placeholder="Search"
+                               aria-label="Search">
+                        <button class="btn btn-unique btn-rounded btn-sm my-0" type="submit" id="search-btn">Search
+                        </button>
+                    </form>
+                </div>
+            </div>
             <hr>
             <div class="col-lg-12">
                 <table class="table">
@@ -34,7 +44,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="task,key:${tasks}">
+                    <tr th:each="task,key:${tasks.content}">
                         <th scope="row" th:text="${key.index}"></th>
                         <td th:text="${task.taskName}"></td>
                         <td th:text="${task.issueDate}"></td>
@@ -48,6 +58,49 @@
                     </tr>
                     </tbody>
                 </table>
+
+                <div class="row">
+                    <div class="form-group col-md-6 quantity-select">
+                        <p style="float: left; margin: 20px 0; padding: 6px 3px;">Show</p>
+                        <select style="float: left; width: 56px;"
+                                class="form-control  event-pagination pagination quantity-pagesize"
+                                id="eventPageSizeSelect">
+                            <option th:each="pageSize : ${pageSizes}"
+                                    th:text="${pageSize}" th:value="${pageSize}"
+                                    th:selected="${pageSize} == ${selectedPageSize}"></option>
+                        </select>
+                        <p style="float: left; margin: 20px 0; padding: 6px 3px;">entries</p>
+                    </div>
+
+                    <div th:if="${tasks.totalPages != 1}" class="form-group col-md-6 pagination-centered next-page">
+                        <div style="float: right">
+                            <ul class=" event-pagination pagination personPagination next-page-ul">
+                                <li th:class="${tasks.number == 0} ? disabled">
+                                    <a class="pageLink" th:href="@{?(pageSize=${selectedPageSize}, page=1)}">&laquo;</a>
+                                </li>
+                                <li th:class="${tasks.number == 0} ? disabled">
+                                    <a class="pageLink"
+                                       th:href="@{?(pageSize=${selectedPageSize}, page=${tasks.number}, typeName=${searchTypeName})}">&larr;</a>
+                                </li>
+                                <li th:class="${tasks.number == (page - 1)} ? 'active pointer-disabled'"
+                                    th:each="page : ${#numbers.sequence(pager.startPage, pager.endPage)}">
+                                    <a class="pageLink"
+                                       th:href="@{?(pageSize=${selectedPageSize}, page=${page}, typeName=${searchTypeName})}"
+                                       th:text="${page}"></a>
+                                </li>
+                                <li th:class="${tasks.number + 1 == tasks.totalPages} ? disabled">
+                                    <a class="pageLink"
+                                       th:href="@{?(pageSize=${selectedPageSize}, page=${tasks.number + 2}, typeName=${searchTypeName})}">&rarr;</a>
+                                </li>
+                                <li th:class="${tasks.number + 1 == tasks.totalPages} ? disabled">
+                                    <a class="pageLink"
+                                       th:href="@{?(pageSize=${selectedPageSize}, page=${tasks.totalPages}, typeName=${searchTypeName})}">&raquo;</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </div>
@@ -55,6 +108,23 @@
 <div data-th-replace="fragments/footer::footer"></div>
 
 <script type="text/javascript" th:inline="javascript">
+
+    $('#eventPageSizeSelect').change(function () {
+        window.location.replace("/home?pageSize="
+            + this.value + "&page=1");
+    });
+
+    $('#search-btn').on('click', function () {
+        var searchValue = $('#search-input').val();
+        $.ajax({
+            url: "/home",
+            type: "GET",
+            success: function (result) {
+                window.location.href = "/home?pageSize=10&page=1&taskName=" + searchValue;
+            }
+        });
+    });
+
     function deleteTask(id) {
         $.ajax({
             url: "/task/delete/" + id,

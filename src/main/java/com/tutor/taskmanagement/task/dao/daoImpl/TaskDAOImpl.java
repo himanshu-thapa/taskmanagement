@@ -42,4 +42,9 @@ public class TaskDAOImpl implements TaskDAO {
     public void deleteTask(Long id) {
         taskRepository.deleteById(id);
     }
+
+    @Override
+    public Page<Task> findAllByUserId(Pageable pageable,Long id, String s) {
+        return taskRepository.findAllByUserId(pageable,id,s);
+    }
 }
