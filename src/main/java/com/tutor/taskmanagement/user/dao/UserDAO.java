@@ -14,4 +14,6 @@ public interface UserDAO {
     User createUser(User user);
 
     void deleteUser(Long id);
+
+    User findUserByEmail(String email);
 }

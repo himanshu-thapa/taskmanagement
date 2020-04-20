@@ -26,6 +26,8 @@ public class User {
     private Date createdDate;
     private Date updatedDate;
 
+    private String resetToken;
+
 
     /*@OneToOne(cascade = CascadeType.ALL)
     @JoinTable(name = "user_role",
