@@ -2,20 +2,30 @@ package com.tutor.taskmanagement.user.controller;
 
 import com.tutor.taskmanagement.user.dao.UserDAO;
 import com.tutor.taskmanagement.user.dto.EmailDto;
+import com.tutor.taskmanagement.user.dto.PasswordDto;
 import com.tutor.taskmanagement.user.enitites.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Controller
 public class ForgetPasswordController {
     @Autowired
     private UserDAO userDAO;
+    @Autowired
+    private JavaMailSender emailSender;
+    @Autowired
+    private BCryptPasswordEncoder encoder;
 
     @RequestMapping("/forget-password")
     public ModelAndView index() {
@@ -25,7 +35,7 @@ public class ForgetPasswordController {
     }
 
     @PostMapping("/forget-password")
-    public ModelAndView resetPassword(@ModelAttribute EmailDto emailDto) {
+    public ModelAndView resetPassword(@ModelAttribute EmailDto emailDto, HttpServletRequest request) throws MessagingException {
         /*Check if email is valid
          * valid -> generate a random token
          *       -> build password reset url and send it as email
@@ -46,8 +56,54 @@ public class ForgetPasswordController {
         user.setResetToken(resetToken);
         userDAO.createUser(user);
 
+        /*Build url*/
+        String appUrl = request.getScheme() + "://" + request.getServerName();
+
+        /*Send reset token in email*/
+        sendEmail(resetToken, user.getEmail(), appUrl);
+
+
         modelAndView.addObject("successMessage", "A password reset link has been sent to " + user.getEmail());
         return modelAndView;
+    }
+
+    private void sendEmail(String resetToken, String email, String appUrl) throws MessagingException {
+        MimeMessage message = emailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(message,
+                MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+        helper.setTo(email);
+
+        helper.setText("To reset your password,click the link below:\n" + appUrl + "/forgetPassword/reset?token="
+                + resetToken, true);
+        helper.setSubject("Password reset");
+
+        emailSender.send(message);
+    }
+
+    //http://localhost:9090/forgetPassword/reset?token=jhfjkabfajkga-jgnakjgnba
+
+    @GetMapping("/forgetPassword/reset")
+    public ModelAndView resetPasswordForm(@RequestParam String token) {
+        User user = userDAO.findUserByResetToken(token);
+        if (token == null || user == null) {
+            return new ModelAndView("login");
+        }
+
+        ModelAndView mv = new ModelAndView("reset-password");
+        mv.addObject("token", token);
+        mv.addObject("passwordDto", new PasswordDto());
+        return mv;
+    }
+
+    @PostMapping("/forgetPassword/reset")
+    public String resetPassword(@ModelAttribute PasswordDto passwordDto) {
+        User user = userDAO.findUserByResetToken(passwordDto.getToken());
+        if (user != null) {
+            user.setPassword(encoder.encode(passwordDto.getPassword()));
+            userDAO.updateUser(user);
+        }
+        return "login";
+
     }
 
 }

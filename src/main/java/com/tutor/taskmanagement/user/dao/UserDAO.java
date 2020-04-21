@@ -16,4 +16,8 @@ public interface UserDAO {
     void deleteUser(Long id);
 
     User findUserByEmail(String email);
+
+    User findUserByResetToken(String token);
+
+    User updateUser(User user);
 }

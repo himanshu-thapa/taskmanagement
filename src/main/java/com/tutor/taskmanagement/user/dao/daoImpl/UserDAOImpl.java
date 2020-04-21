@@ -42,4 +42,21 @@ public class UserDAOImpl implements UserDAO {
     public User findUserByEmail(String email) {
         return userRepo.findByEmail(email);
     }
+
+    @Override
+    public User findUserByResetToken(String token) {
+        return userRepo.findByResetToken(token);
+    }
+
+    @Override
+    public User updateUser(User user) {
+        Optional<User> user1 = userRepo.findById(user.getId());
+        if (user1.isPresent()) {
+            User user2 = user1.get();
+            user2.setPassword(user.getPassword());
+            userRepo.save(user2);
+            return user2;
+        }
+        return null;
+    }
 }
