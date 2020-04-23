@@ -3,6 +3,7 @@ package com.tutor.taskmanagement.user.controller;
 import com.tutor.taskmanagement.user.dao.UserDAO;
 import com.tutor.taskmanagement.user.dto.EmailDto;
 import com.tutor.taskmanagement.user.dto.PasswordDto;
+import com.tutor.taskmanagement.user.dto.SuccessHandler;
 import com.tutor.taskmanagement.user.enitites.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 @Controller
+@RequestMapping("/forget-password")
 public class ForgetPasswordController {
     @Autowired
     private UserDAO userDAO;
@@ -27,14 +29,14 @@ public class ForgetPasswordController {
     @Autowired
     private BCryptPasswordEncoder encoder;
 
-    @RequestMapping("/forget-password")
+    @GetMapping
     public ModelAndView index() {
         ModelAndView mv = new ModelAndView("forgot-password");
         mv.addObject("emailDto", new EmailDto());
         return mv;
     }
 
-    @PostMapping("/forget-password")
+    @PostMapping
     public ModelAndView resetPassword(@ModelAttribute EmailDto emailDto, HttpServletRequest request) throws MessagingException {
         /*Check if email is valid
          * valid -> generate a random token
@@ -73,20 +75,23 @@ public class ForgetPasswordController {
                 MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
         helper.setTo(email);
 
-        helper.setText("To reset your password,click the link below:\n" + appUrl + "/forgetPassword/reset?token="
+        helper.setText("To reset your password,click the link below:\n" + appUrl + ":9090/forget-password/reset?token="
                 + resetToken, true);
         helper.setSubject("Password reset");
 
         emailSender.send(message);
+        System.out.println("MAIL SENT SUCCESSFULLY TO: " + email);
     }
 
     //http://localhost:9090/forgetPassword/reset?token=jhfjkabfajkga-jgnakjgnba
 
-    @GetMapping("/forgetPassword/reset")
+    @GetMapping("/reset")
     public ModelAndView resetPasswordForm(@RequestParam String token) {
         User user = userDAO.findUserByResetToken(token);
         if (token == null || user == null) {
-            return new ModelAndView("login");
+            ModelAndView mv = new ModelAndView("login");
+            mv.addObject("errorMessage", "No Token found!");
+            return mv;
         }
 
         ModelAndView mv = new ModelAndView("reset-password");
@@ -95,15 +100,15 @@ public class ForgetPasswordController {
         return mv;
     }
 
-    @PostMapping("/forgetPassword/reset")
-    public String resetPassword(@ModelAttribute PasswordDto passwordDto) {
+    @PostMapping("/reset")
+    @ResponseBody
+    public SuccessHandler resetPassword(@RequestBody PasswordDto passwordDto) {
         User user = userDAO.findUserByResetToken(passwordDto.getToken());
         if (user != null) {
             user.setPassword(encoder.encode(passwordDto.getPassword()));
             userDAO.updateUser(user);
         }
-        return "login";
-
+        return new SuccessHandler(200, "changed!");
     }
 
 }

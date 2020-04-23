@@ -7,5 +7,6 @@ import lombok.Setter;
 @Setter
 public class PasswordDto {
     private String password;
+    private String confirmPassword;
     private String token;
 }

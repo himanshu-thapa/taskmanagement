@@ -6,7 +6,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -19,15 +18,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public UserDetailsService userDetailsService(){
+    public UserDetailsService userDetailsService() {
         return new UserDetailsServiceImpl();
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        http.authorizeRequests()
-                .antMatchers("/", "/login", "/register","/resources/**","/bootstrap/**","/css/**","/jquery/**","/forget-password")
+        http.csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/", "/login", "/register", "/resources/**", "/bootstrap/**", "/css/**", "/jquery/**", "/forget-password/**")
                 .permitAll()
                 .anyRequest()
                 .hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")
